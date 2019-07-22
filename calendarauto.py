@@ -46,9 +46,9 @@ def main():
     # Call the Calendar API
     #VERY IMPORTANT VARIABLES
     BEGINNING_TODAY = (datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)).isoformat() + 'Z' # 'Z' indicates UTC time
-    END_TODAY = (datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) +  timedelta(days=1)).isoformat() + 'Z' # 'Z' indicates UTC time
+    END_TODAY = (datetime.datetime.utcnow().replace(hour=23, minute=59, second=59, microsecond=0) ).isoformat() + 'Z' # 'Z' indicates UTC time
 
-    print('Getting Events from '+ str(BEGINNING_TODAY))
+    print('Getting Events from '+ str(BEGINNING_TODAY)+ ' until '+str(END_TODAY))
     events_result = service.events().list(calendarId='primary', timeMin=BEGINNING_TODAY,#VERY IMPORTANT VARIABLE
                                         maxResults=EVENTS_TO_LOOK_THROUGH, singleEvents=True,
                                         orderBy='startTime').execute()
