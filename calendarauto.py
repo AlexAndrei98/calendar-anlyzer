@@ -45,14 +45,11 @@ def main():
 
     # Call the Calendar API
     #VERY IMPORTANT VARIABLES
-    start_day = datetime.datetime.utcnow()
-    now = (datetime.datetime.utcnow() -  timedelta(days=1)).isoformat() + 'Z' # 'Z' indicates UTC time
-    new_end = (datetime.datetime.utcnow() +  timedelta(days=1)).isoformat() + 'Z' # 'Z' indicates UTC time
+    BEGINNING_TODAY = (datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)).isoformat() + 'Z' # 'Z' indicates UTC time
+    END_TODAY = (datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) +  timedelta(days=1)).isoformat() + 'Z' # 'Z' indicates UTC time
 
-    print('Getting Evetns from '+ str(now) +'\n')
-    print('**************************************************************\n')
-
-    events_result = service.events().list(calendarId='primary', timeMin=now,#VERY IMPORTANT VARIABLE
+    print('Getting Events from '+ str(BEGINNING_TODAY))
+    events_result = service.events().list(calendarId='primary', timeMin=BEGINNING_TODAY,#VERY IMPORTANT VARIABLE
                                         maxResults=EVENTS_TO_LOOK_THROUGH, singleEvents=True,
                                         orderBy='startTime').execute()
     colors = service.colors().get(fields='event').execute()
@@ -64,7 +61,7 @@ def main():
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
-        if start > new_end: #VERY IMPORTANT VARIABLE WHERE IT CHECKS THE DATE 
+        if start > END_TODAY: #VERY IMPORTANT VARIABLE WHERE IT CHECKS THE DATE 
             pass
         else:
             total_event_scanned+=1
@@ -109,25 +106,25 @@ def main():
             task.get_time_of_task()
             tasks.append(task)
     
-    total_tasks = []
-    for i in range(0,11):
-        if len(color_activity[i]) > 1: 
-            new_task = Task(color_activity[i], 0, 0, i )
-            for task in tasks:
-                if task.color == i:
-                    # print("\n\t\tTASK\n")
-                    # print("\t\t"+task.name + " starting at " + task.start_time +" ending at "+task.end_time+ " of color "+ str(task.color))
-                    new_task.total_time += task.total_time
-            text = "For " + new_task.name + " you have planned to spend:"
-            number_of_spaces = 10
-            number_of_spaces -= len(new_task.name)
-            string_length=len(text)+number_of_spaces    # will be adding 10 extra spaces
-            string_revised=text.ljust(string_length)
-            print("-----------------------------------------------------------------")
-            print(string_revised + str(new_task.total_time) + "hrs this week")
-    print("TOTAL ENEVENTS SCANNED" + str(total_event_scanned))
-    print("\n-----------------------------------------------------------------\n")
-    print("\n********************************************************\n")
+    # for i in range(0,11):
+    #     if len(color_activity[i]) > 1: 
+    #         new_task = Task(color_activity[i], 0, 0, i )
+    #         for task in tasks:
+    #             if task.color == i:
+    #                 # print("\n\t\tTASK\n")
+    #                 # print("\t\t"+task.name + " starting at " + task.start_time +" ending at "+task.end_time+ " of color "+ str(task.color))
+    #                 new_task.total_time += task.total_time
+    #         text = "For " + new_task.name + " you have planned to spend:"
+    #         number_of_spaces = 10
+    #         number_of_spaces -= len(new_task.name)
+    #         string_length=len(text)+number_of_spaces    # will be adding 10 extra spaces
+    #         string_revised=text.ljust(string_length)
+    #         print("-----------------------------------------------------------------")
+    #         print(string_revised + str(new_task.total_time) + "hrs this week")
+    # print("TOTAL ENEVENTS SCANNED: " + str(total_event_scanned))
+    # print("\n-----------------------------------------------------------------\n")
+    print("Events SUCCESFULLY retrived ")
+    return tasks
                 
 
 
