@@ -18,7 +18,7 @@ EVENTS_TO_LOOK_THROUGH = 15
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
-def main():
+def main(OUTPUT_STRING):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -45,8 +45,8 @@ def main():
 
     # Call the Calendar API
     #VERY IMPORTANT VARIABLES
-    BEGINNING_TODAY = (datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).isoformat() + 'Z' # 'Z' indicates UTC time
-    END_TODAY = (datetime.datetime.now().replace(hour=23, minute=59, second=59, microsecond=0) ).isoformat() + 'Z' # 'Z' indicates UTC time
+    BEGINNING_TODAY = (datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).isoformat() + '-05:00' # 'Z' indicates UTC time
+    END_TODAY = (datetime.datetime.now().replace(hour=23, minute=59, second=59, microsecond=0) ).isoformat() + '-05:00' # 'Z' indicates UTC time
 
     print('Getting Events from '+ str(BEGINNING_TODAY)+ ' until '+str(END_TODAY))
     events_result = service.events().list(calendarId='primary', timeMin=BEGINNING_TODAY,#VERY IMPORTANT VARIABLE
@@ -57,7 +57,7 @@ def main():
     tasks = []
     total_event_scanned=0
     if not events:
-        print('No upcoming events found.')
+        OUTPUT_STRING+= '\n No upcoming events found.'
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
@@ -106,7 +106,7 @@ def main():
             task.get_time_of_task()
             tasks.append(task)
     for task in tasks:
-        print('\t'+task.name)
+        OUTPUT_STRING+= '\t'+task.name+ ' at time: '+ task.start_time    +'\n'
     
     # for i in range(0,11):
     #     if len(color_activity[i]) > 1: 
@@ -125,15 +125,9 @@ def main():
     #         print(string_revised + str(new_task.total_time) + "hrs this week")
     # print("TOTAL ENEVENTS SCANNED: " + str(total_event_scanned))
     # print("\n-----------------------------------------------------------------\n")
-    print("Events SUCCESFULLY retrived ")
-    return tasks
-                
-
-
-
-
-if __name__ == '__main__':
-    main()
+    # print("Events SUCCESFULLY retrived ")
+    return tasks,OUTPUT_STRING
+        
 
             # if color == "#a4bdfc":
             #     color='LAVENDER'

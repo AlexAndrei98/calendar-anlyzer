@@ -1,7 +1,7 @@
 #GET THE DAY WITH THE INFO 
 import myfitnesspal
 import datetime
-def food_analysis():
+def food_analysis(OUTPUT_STRING):
     client = myfitnesspal.Client('alexandrei1998@hotmail.it')
     day = client.get_date(datetime.datetime.now().year, datetime.datetime.now().month,datetime.datetime.now().day)
     #---------------------------
@@ -10,25 +10,26 @@ def food_analysis():
     LUNCH =  day.meals[1]
     DINNER = day.meals[2]
     SNACKS = day.meals[3]
+    OUTPUT_STRING +="\n\nToday you ate the following:"
 
     if (len(BREAKFAST)>0):
-        print("You had a good BREAKFAST for calories: "+str(BREAKFAST.totals['calories']))
+        OUTPUT_STRING +="\nYou had a good BREAKFAST for calories: "+str(BREAKFAST.totals['calories'])
     else:
-        print("Bro you gotta eat some BREAKFAST")
+        OUTPUT_STRING +="\nBro you gotta eat some BREAKFAST"
 
     if (len(LUNCH)>0):
-        print("You had a good LUNCH for calories: "+str(LUNCH.totals['calories']))
+        OUTPUT_STRING +="\nYou had a good LUNCH for calories: "+str(LUNCH.totals['calories'])
     else:
-        print("Bro you gotta eat some LUNCH")
+        OUTPUT_STRING +="\nBro you gotta eat some LUNCH"
 
     if (len(DINNER)>0):
-        print("You had a good DINNER for calories: "+str(DINNER.totals['calories']))
+        OUTPUT_STRING +="\nYou had a good DINNER for calories: "+str(DINNER.totals['calories'])
     else:
-        print("Bro you gotta eat some DINNER")
+        OUTPUT_STRING +="\nBro you gotta eat some DINNER"
     if (len(SNACKS)>0):
-        print("You had a good SNACKS for calories: "+str(SNACKS.totals['calories']))
+        OUTPUT_STRING +="\nYou had a good SNACKS for calories: "+str(SNACKS.totals['calories'])
     else:
-        print("Bro you gotta eat some SNACKS")
+        OUTPUT_STRING +="\nBro you gotta eat some SNACKS"
     """
     [<Breakfast {}>, 
     <Lunch {
@@ -48,8 +49,11 @@ def food_analysis():
     <Snacks {}>]
     """
     #Print Cardiovascular exercise 
-    # print(day.exercises[0].get_as_list())
 
+    OUTPUT_STRING +="\n\nToday you did the following exercises: \n"
+    if(len(day.exercises[0].get_as_list())>0):
+        for ex in day.exercises[0].get_as_list():
+            OUTPUT_STRING += ex['name'] + " for "+str(ex['nutrition_information']['minutes']) + ' minutes\n'
     """
     [
         {'name': 'Kickboxing (including Turbo Jam)', 
@@ -67,5 +71,11 @@ def food_analysis():
     ]
     """
     #Print Strength exercise 
-    # print(day.exercises[1].get_as_list())
+    if(len(day.exercises[1].get_as_list())>0):
+        for ex in day.exercises[0].get_as_list():
+            OUTPUT_STRING += ex['name'] + " for "+str(ex['nutrition_information']['minutes']) + ' minutes\n'
+
+
+
+    return OUTPUT_STRING
 
